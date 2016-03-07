@@ -7,6 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.chienpao.designpattern.designpattern.decorator.IPacketCreator;
+import com.chienpao.designpattern.designpattern.decorator.PacketBodyCreator;
+import com.chienpao.designpattern.designpattern.decorator.PacketHTTPHeaderCreator;
+import com.chienpao.designpattern.designpattern.decorator.PacketHtmlHeaderCreator;
+import com.chienpao.designpattern.designpattern.flyWeight.IReportManager;
+import com.chienpao.designpattern.designpattern.flyWeight.ReportManagerFactory;
 import com.chienpao.designpattern.designpattern.proxy.DBProxyQuery;
 import com.chienpao.designpattern.designpattern.singleton.factory.LazySingleton;
 import com.chienpao.designpattern.designpattern.singleton.factory.Singleton;
@@ -25,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
         launchSingleton();
 
         launchProxy();
+
+        launchFlyWeight();
+
+        launchDecorator();
     }
 
     @Override
@@ -103,5 +113,25 @@ public class MainActivity extends AppCompatActivity {
 
         // Initial real object when request
         dbProxyQuery.request();
+    }
+
+    private void launchFlyWeight() {
+        ReportManagerFactory rmf = new ReportManagerFactory();
+        IReportManager rm = rmf.getFinancialReportManager("A");
+        Log.v(TAG, rm.createReport());
+
+        IReportManager rm2 = rmf.getFinancialReportManager("B");
+        Log.v(TAG, rm2.createReport());
+
+        IReportManager rm3 = rmf.getEmployeeReportManager("A");
+        Log.v(TAG, rm3.createReport());
+
+        IReportManager rm4 = rmf.getEmployeeReportManager("B");
+        Log.v(TAG, rm4.createReport());
+    }
+
+    private void launchDecorator() {
+        IPacketCreator pc = new PacketHTTPHeaderCreator(new PacketHtmlHeaderCreator(new PacketBodyCreator()));
+        Log.v(TAG, pc.handleContent());
     }
 }

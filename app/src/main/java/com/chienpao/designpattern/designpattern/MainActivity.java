@@ -13,6 +13,8 @@ import com.chienpao.designpattern.designpattern.decorator.PacketHTTPHeaderCreato
 import com.chienpao.designpattern.designpattern.decorator.PacketHtmlHeaderCreator;
 import com.chienpao.designpattern.designpattern.flyWeight.IReportManager;
 import com.chienpao.designpattern.designpattern.flyWeight.ReportManagerFactory;
+import com.chienpao.designpattern.designpattern.observer.ConcreteObserver;
+import com.chienpao.designpattern.designpattern.observer.ConcreteSubject;
 import com.chienpao.designpattern.designpattern.proxy.DBProxyQuery;
 import com.chienpao.designpattern.designpattern.singleton.factory.LazySingleton;
 import com.chienpao.designpattern.designpattern.singleton.factory.Singleton;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         launchFlyWeight();
 
         launchDecorator();
+
+        launchObserver();
     }
 
     @Override
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).start();
 
-                /*new Thread(new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         long begin = System.currentTimeMillis();
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.v(TAG, "StaticSingleton spend:" + (System.currentTimeMillis() - begin));
                     }
                 }).start();
-                break;*/
+                break;
         }
     }
 
@@ -133,5 +137,34 @@ public class MainActivity extends AppCompatActivity {
     private void launchDecorator() {
         IPacketCreator pc = new PacketHTTPHeaderCreator(new PacketHtmlHeaderCreator(new PacketBodyCreator()));
         Log.v(TAG, pc.handleContent());
+    }
+
+    private void launchObserver() {
+        ConcreteObserver observer1 = new ConcreteObserver();
+        ConcreteObserver observer2 = new ConcreteObserver();
+        ConcreteSubject subject = new ConcreteSubject();
+
+        Log.v(TAG, "Observer Experiment 1 ===== Start =====");
+        // Attach observer
+        subject.attach(observer1);
+        subject.inform();
+
+        // Detach observer
+        subject.detach(observer1);
+        subject.inform();
+        Log.v(TAG, "Observer Experiment 1 ===== End =====");
+
+        Log.v(TAG, "Observer Experiment 2 ===== Start =====");
+        // Attach observer
+        subject.attach(observer1);
+        subject.attach(observer2);
+        subject.inform();
+
+        // Detach observer
+        subject.detach(observer1);
+        subject.inform();
+        subject.detach(observer2);
+        subject.inform();
+        Log.v(TAG, "Observer Experiment 2 ===== End =====");
     }
 }

@@ -19,6 +19,7 @@ import com.chienpao.designpattern.designpattern.proxy.DBProxyQuery;
 import com.chienpao.designpattern.designpattern.singleton.factory.LazySingleton;
 import com.chienpao.designpattern.designpattern.singleton.factory.Singleton;
 import com.chienpao.designpattern.designpattern.singleton.factory.StaticSingleton;
+import com.chienpao.designpattern.designpattern.valueObject.OrderManager;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         launchDecorator();
 
         launchObserver();
+
+        launchValueObject();
     }
 
     @Override
@@ -166,5 +169,17 @@ public class MainActivity extends AppCompatActivity {
         subject.detach(observer2);
         subject.inform();
         Log.v(TAG, "Observer Experiment 2 ===== End =====");
+    }
+
+    private void launchValueObject() {
+        OrderManager orderManager = new OrderManager();
+
+        // Only one time
+        orderManager.getOrder(1);
+
+        // Need three times
+        orderManager.getClientName(1);
+        orderManager.getProdName(1);
+        orderManager.getNumber(1);
     }
 }
